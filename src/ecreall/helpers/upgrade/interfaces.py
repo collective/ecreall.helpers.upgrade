@@ -9,7 +9,7 @@ class IUpgradeTool(Interface):
 
     def runUpgradeSteps(steps):
         """
-        @parap steps : tuple of pairs (product, version)
+        @param steps : tuple of pairs (product, version)
         pass upgrade steps of products
 
         ex: self.passUpgradeSteps((("alter.my.product", "1.0.2"),
@@ -42,7 +42,7 @@ class IUpgradeTool(Interface):
 
     def reinstallProduct(product):
         """
-        uninstall product
+        reinstall product
         """
 
     def runUpgradeProfile(profile):
