@@ -88,9 +88,7 @@ class UpgradeTool(object):
 
     def runProfile(self, profile, purge_old=False):
         if not ':' in profile:
-            profile = 'profile-%s:default' % profile
-        else:
-            profile = 'profile-%s' % profile
+            profile = '%s:default' % profile
 
         self.psetup.runAllImportStepsFromProfile('profile-%s' % profile, purge_old=purge_old)
 
