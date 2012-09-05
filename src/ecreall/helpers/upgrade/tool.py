@@ -134,7 +134,7 @@ class UpgradeTool(object):
 
     def migrateContent(self, portal_types, method,
                        catalogs=('portal_catalog',), query=None,
-                       nofail=True, commit=False):
+                       nofail=True, commit=False, stop_at_count=0):
         """ apply method on portal_types contents of catalogs """
 
         portal = self.portal
@@ -160,6 +160,9 @@ class UpgradeTool(object):
         successes = 0
         failures = 0
         for count, brain in enumerate(brains):
+            if stop_at_count and count == stop_at_count:
+                break
+
             try:
                 path = brain.getPath()
                 LOG.debug(path)
@@ -217,16 +220,17 @@ class UpgradeTool(object):
         return message
 
     def reindexContents(self, portal_types, indexes=(),
-                        query=None, nofail=True, commit=False):
+                        query=None, nofail=True, commit=False, stop_at_count=0):
 
         def reindex_object(obj, path=None):
             obj.reindexObject(idxs=indexes)
 
         self.migrateContent(portal_types, reindex_object, query=query,
-                            nofail=nofail, commit=commit)
+                            nofail=nofail, commit=commit, stop_at_count=stop_at_count)
 
     def migrateRoleMappings(self, portal_types,
-                            catalogs=('portal_catalog',), reindex=False, commit=False):
+                            catalogs=('portal_catalog',), reindex=False, commit=False,
+                            stop_at_count=0):
         """ update security mappings on objets after workflow definitions changed """
 
         if type(portal_types) not in (tuple, list):
@@ -242,7 +246,7 @@ class UpgradeTool(object):
                 obj.reindexObjectSecurity()
 
         self.migrateContent(portal_types, updateObjectRoleMappings, catalogs=catalogs,
-                            commit=commit)
+                            commit=commit, stop_at_count=stop_at_count)
 
         message = "%s mappings updated" % ", ".join(portal_types)
         LOG.info(message)

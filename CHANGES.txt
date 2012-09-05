@@ -4,7 +4,7 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added a parameter to stop migration after n contents migrated.
 
 
 1.0.1 (2012-09-03)
