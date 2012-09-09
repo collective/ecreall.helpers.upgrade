@@ -159,6 +159,11 @@ class UpgradeTool(object):
         count = 0
         successes = 0
         failures = 0
+        from webdav.EtagSupport import EtagSupport
+        EtagSupport._http__refreshEtag = EtagSupport.http__refreshEtag
+        # avoid to modify the object
+        # 5 ko is an approximate size of an Archetypes object on the filesystem
+        EtagSupport.http__refreshEtag = lambda x: ""
         for count, brain in enumerate(brains):
             if stop_at_count and count == stop_at_count:
                 break
@@ -210,6 +215,7 @@ class UpgradeTool(object):
                         portal._p_jar._cache.cache_non_ghost_count,
                         portal._p_jar._cache.cache_size)
 
+        EtagSupport.http__refreshEtag = EtagSupport._http__refreshEtag
         LOG.info("%s objects updated", str(successes))
         LOG.info("%s failures", str(failures))
         if failures > successes:

@@ -4,6 +4,9 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
+- monkey patch EtagSupport.http__refreshEtag during reindex to not modify
+  objects.
+
 - Added a parameter to stop migration after n contents migrated.
 
 
