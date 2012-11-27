@@ -63,6 +63,9 @@ class UpgradeTool(object):
                 if upgrade['dest'] == destpath:
                     steps_to_run = [upgrade['id']]
                     break
+        else:
+            steps_to_run = None
+
         if not steps_to_run:
             raise KeyError, "Upgrade %s doesn't exist in profile %s" % (destination, profile)
 
