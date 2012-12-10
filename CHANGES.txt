@@ -4,7 +4,11 @@ Changelog
 1.1.1 (unreleased)
 ----------------
 
-- Fixed case profile doesn't exist on runUpgradeStep method.
+- Fixed interface documentation.
+  [thomasdesvenain]
+
+- Better error handling when profile passed as runUpgradeStep method parameter
+  doesn't exist.
   [thomasdesvenain]
 
 

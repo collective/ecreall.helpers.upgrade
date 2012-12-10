@@ -23,7 +23,11 @@ class IUpgradeTool(Interface):
         """
 
     def runProfile(profile, purge_old=False):
-        """Run all steps od a profile
+        """Run all steps of a profile
+        @param profile : migration profile package + ":" profile name
+                         or default profile
+        ex: self.runProfile("conf.site.common.upgrades:v1_3_0")
+            self.runProfile("conf.site.common")
         """
 
     def runImportStep(profile, importstep):
@@ -48,8 +52,6 @@ class IUpgradeTool(Interface):
     def runUpgradeProfile(profile):
         """
         run an upgrade profile
-        @param profile : migration profile package + ":" profile name
-        ex: self.runUpgradeProfile("conf.site.common.upgrades:v1_3_0")
         """
 
     def migrateContent(portal_types, method, catalogs=('portal_catalog',),
