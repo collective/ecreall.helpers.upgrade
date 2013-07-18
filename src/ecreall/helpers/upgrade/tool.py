@@ -33,8 +33,9 @@ class UpgradeTool(object):
         js_tool = getToolByName(self.portal, 'portal_javascripts')
         js_tool.cookResources()
 
-        kss_tool = getToolByName(self.portal, 'portal_kss')
-        kss_tool.cookResources()
+        kss_tool = getToolByName(self.portal, 'portal_kss', None)
+        if kss_tool:
+            kss_tool.cookResources()
 
         return "Js, kss and css refreshed"
 

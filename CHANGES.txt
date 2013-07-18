@@ -4,7 +4,8 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- refreshResources method works if kss is not installed.
+  [thomasdesvenain]
 
 
 1.1.1 (2012-12-10)
