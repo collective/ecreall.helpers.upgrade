@@ -1,8 +1,8 @@
 Changelog
 =========
 
-* (2013-07-18)
---------------
+1.1.2 (2013-07-18)
+------------------
 
 - refreshResources method works if kss is not installed.
   [thomasdesvenain]
