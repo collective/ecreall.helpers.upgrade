@@ -250,8 +250,8 @@ class UpgradeTool(object):
         getWorkflowTools = wf_tool.getWorkflowsFor
 
         def updateObjectRoleMappings(obj, path):
-            workflow = getWorkflowTools(obj)[0]
-            workflow.updateRoleMappingsFor(obj)
+            for workflow in getWorkflowTools(obj):
+                workflow.updateRoleMappingsFor(obj)
             if reindex:
                 obj.reindexObjectSecurity()
 
