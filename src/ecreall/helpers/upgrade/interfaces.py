@@ -75,3 +75,8 @@ class IUpgradeTool(Interface):
         add and/or reindex indexes of catalogs
         @param index_tuples list of tuples [(index, index_type)]
         """
+        
+    def addMetadata(metadata, catalogs=['portal_catalog']):
+            """
+            add columns in catalog schema
+            """

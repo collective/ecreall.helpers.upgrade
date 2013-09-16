@@ -117,6 +117,7 @@ class UpgradeTool(object):
         portal = self.portal
         if type(catalogs) not in (tuple, list):
             catalogs = [catalogs]
+            
         catalogs = [getToolByName(portal, c) for c in catalogs]
         msgs = []
         for catalog in catalogs:
@@ -126,16 +127,42 @@ class UpgradeTool(object):
                     msg = "Added %s index in %s catalog" % (index, catalog.id)
                     LOG.info(msg)
                     msgs.append(msg)
+                    
                 if reindex:
                     LOG.info("reindex index %s on catalog %s", index, catalog.id)
                     catalog.reindexIndex(index, portal.REQUEST)
                 transaction.savepoint(optimistic=True)
+                
             LOG.info("Updated %s catalog", catalog.id)
-        indexes_msg = ", ".join([i for i, t in index_tuples])
+            
+        indexes_msg = ", ".join([i[0] for i in index_tuples])
         transaction.savepoint(optimistic=True)
         msgs.append("Updated %s indexes" % indexes_msg)
         return msgs
+    
+    def addMetadata(self, metadata, catalogs=['portal_catalog']):
+        """
+        add columns in catalog schema
+        """
+        if type(catalogs) not in (tuple, list):
+            catalogs = [catalogs]
+            
+        catalogs = [getToolByName(self.portal, c) for c in catalogs]
 
+        if type(metadata) not in (tuple, list):
+            metadata = [metadata]
+            
+        msgs = []
+        for catalog in catalogs:
+            for column in metadata:
+                if column not in metadata:
+                    catalog.addColumn(column)
+                    msg = "Added %s column" % column
+                    LOG.info(msg)
+                    msgs.append(msg)
+                    
+        return msgs 
+    
     def migrateContent(self, portal_types, method,
                        catalogs=('portal_catalog',), query=None,
                        nofail=True, commit=False, stop_at_count=0):
