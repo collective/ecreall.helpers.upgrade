@@ -4,7 +4,8 @@ Changelog
 1.1.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- IUpgradeTool can also adapt portal and directory import context.
+  [thomasdesvenain]
 
 
 1.1.4 (2013-09-25)

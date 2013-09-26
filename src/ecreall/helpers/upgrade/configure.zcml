@@ -6,4 +6,10 @@
     <adapter factory=".tool.UpgradeTool"
              provides=".interfaces.IUpgradeTool" />
 
+    <adapter factory=".tool.UpgradeToolForPortal"
+             provides=".interfaces.IUpgradeTool" />
+
+    <adapter factory=".tool.UpgradeToolForChunkableImportContext"
+             provides=".interfaces.IUpgradeTool" />
+
 </configure>

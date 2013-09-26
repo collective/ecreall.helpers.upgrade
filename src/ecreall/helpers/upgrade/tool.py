@@ -6,13 +6,15 @@ from zope.interface import implements
 from zope.component import adapts
 
 from Products.GenericSetup.upgrade import _upgrade_registry
-from Products.GenericSetup.interfaces import ISetupTool
+from Products.GenericSetup.interfaces import ISetupTool, IChunkableImportContext
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
 LOG = logging.getLogger('Upgrade Tool')
 
 from interfaces import IUpgradeTool
 import transaction
+
 
 class UpgradeTool(object):
 
@@ -288,3 +290,23 @@ class UpgradeTool(object):
         message = "%s mappings updated" % ", ".join(portal_types)
         LOG.info(message)
         return message
+
+
+class UpgradeToolForPortal(UpgradeTool):
+
+    adapts(IPloneSiteRoot)
+
+    def __init__(self, context):
+        self.portal = context
+        self.psetup = self.portal.portal_setup
+        self.qitool = self.portal.portal_quickinstaller
+
+
+class UpgradeToolForChunkableImportContext(UpgradeTool):
+
+    adapts(IChunkableImportContext)
+
+    def __init__(self, context):
+        self.psetup = context._tool.aq_inner
+        self.portal = self.psetup.aq_parent
+        self.qitool = self.portal.portal_quickinstaller
