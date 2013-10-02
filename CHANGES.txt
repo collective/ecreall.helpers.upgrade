@@ -1,7 +1,14 @@
 Changelog
 =========
 
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+- IUpgradeTool can also adapt portal and directory import context.
+  [thomasdesvenain]
+
+
+1.1.4 (2013-09-25)
 ------------------
 
 - updateIndexes remove old index if it doesn't have the good type.

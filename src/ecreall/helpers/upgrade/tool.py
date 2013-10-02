@@ -6,13 +6,15 @@ from zope.interface import implements
 from zope.component import adapts
 
 from Products.GenericSetup.upgrade import _upgrade_registry
-from Products.GenericSetup.interfaces import ISetupTool
+from Products.GenericSetup.interfaces import ISetupTool, IChunkableImportContext
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
 LOG = logging.getLogger('Upgrade Tool')
 
 from interfaces import IUpgradeTool
 import transaction
+
 
 class UpgradeTool(object):
 
@@ -107,7 +109,7 @@ class UpgradeTool(object):
                                              purge_old=purge_old)
 
     def updateIndexes(self, index_tuples, catalogs=['portal_catalog'],
-                      reindex=True, delete=False):
+                      reindex=True):
         """
         add and/or reindex indexes of catalogs
 
@@ -124,7 +126,7 @@ class UpgradeTool(object):
         for catalog in catalogs:
             for index, index_type in index_tuples:
                 if index in catalog.indexes():
-                    if catalog.indexes[index] != index_type:
+                    if catalog._catalog.indexes[index] != index_type:
                         catalog.delIndex(index)
                         msg = "Removed %s index with bad type in %s catalog" % (
                             index, catalog.id)
@@ -164,7 +166,7 @@ class UpgradeTool(object):
         msgs = []
         for catalog in catalogs:
             for column in metadata:
-                if column not in metadata:
+                if column not in catalog.schema():
                     catalog.addColumn(column)
                     msg = "Added %s column" % column
                     LOG.info(msg)
@@ -297,3 +299,23 @@ class UpgradeTool(object):
         message = "%s mappings updated" % ", ".join(portal_types)
         LOG.info(message)
         return message
+
+
+class UpgradeToolForPortal(UpgradeTool):
+
+    adapts(IPloneSiteRoot)
+
+    def __init__(self, context):
+        self.portal = context
+        self.psetup = self.portal.portal_setup
+        self.qitool = self.portal.portal_quickinstaller
+
+
+class UpgradeToolForChunkableImportContext(UpgradeTool):
+
+    adapts(IChunkableImportContext)
+
+    def __init__(self, context):
+        self.psetup = context._tool.aq_inner
+        self.portal = self.psetup.aq_parent
+        self.qitool = self.portal.portal_quickinstaller
