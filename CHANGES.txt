@@ -4,6 +4,9 @@ Changelog
 1.1.4 (unreleased)
 ------------------
 
+- updateIndexes remove old index if it doesn't have the good type.
+  [thomasdesvenain]
+
 - Added a method to add metadata in catalog.
   [thomasdesvenain]
 
