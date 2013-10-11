@@ -4,6 +4,9 @@ Changelog
 1.1.5 (unreleased)
 ------------------
 
+- Use ProgressHandler in migrateContent.
+  [vincentfretin]
+
 - IUpgradeTool can also adapt portal and directory import context.
   [thomasdesvenain]
 

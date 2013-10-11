@@ -9,11 +9,17 @@ from Products.GenericSetup.upgrade import _upgrade_registry
 from Products.GenericSetup.interfaces import ISetupTool, IChunkableImportContext
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+from Products.ZCatalog.ProgressHandler import ZLogHandler
 
 LOG = logging.getLogger('Upgrade Tool')
 
 from interfaces import IUpgradeTool
 import transaction
+
+class ProgressHandler(ZLogHandler):
+
+    def output(self, text):
+        LOG.info('%s: %s' % (self._ident, text))
 
 
 class UpgradeTool(object):
@@ -197,7 +203,8 @@ class UpgradeTool(object):
             brains += catalog.unrestrictedSearchResults(query)
 
         LOG.info("Migrate %s contents with %s method", ", ".join(portal_types), method.__name__)
-        LOG.info("%s objects to migrate", len(brains))
+        pghandler = ProgressHandler(50)
+        pghandler.init('Migration', len(brains))
         count = 0
         successes = 0
         failures = 0
@@ -239,11 +246,7 @@ class UpgradeTool(object):
                 else:
                     raise
 
-            if count and not (count) % 50:
-                LOG.info("%s objects migrated", str(count))
-                LOG.debug("non_ghost_count: %s / %s",
-                        portal._p_jar._cache.cache_non_ghost_count,
-                        portal._p_jar._cache.cache_size)
+            pghandler.report(count)
             if count and not count % 500:
                 if commit:
                     LOG.debug("COMMIT")
@@ -253,11 +256,9 @@ class UpgradeTool(object):
                     LOG.debug("SAVEPOINT")
                     transaction.savepoint(optimistic=True)
                     LOG.debug("DONE")
-                LOG.debug("non_ghost_count: %s / %s",
-                        portal._p_jar._cache.cache_non_ghost_count,
-                        portal._p_jar._cache.cache_size)
 
         EtagSupport.http__refreshEtag = EtagSupport._http__refreshEtag
+        pghandler.finish()
         LOG.info("%s objects updated", str(successes))
         LOG.info("%s failures", str(failures))
         if failures > successes:
