@@ -58,6 +58,9 @@ class UpgradeTool(object):
     def runUpgradeStep(self, profile, destination):
         """Run upgrade step of a profile towards a destination
         """
+        if type(destination) == int:
+            destination = str(destination)
+
         if not ':' in profile:
             profile = '%s:default' % profile
 
@@ -115,7 +118,7 @@ class UpgradeTool(object):
                                              importstep, run_dependencies=False,
                                              purge_old=purge_old)
 
-    def updateIndexes(self, index_tuples, catalogs=['portal_catalog'],
+    def updateIndexes(self, index_tuples, catalogs=('portal_catalog',),
                       reindex=True):
         """
         add and/or reindex indexes of catalogs
@@ -158,7 +161,7 @@ class UpgradeTool(object):
         msgs.append("Updated %s indexes" % indexes_msg)
         return msgs
 
-    def addMetadata(self, metadata, catalogs=['portal_catalog']):
+    def addMetadata(self, metadata, catalogs=('portal_catalog',)):
         """
         add columns in catalog schema
         """

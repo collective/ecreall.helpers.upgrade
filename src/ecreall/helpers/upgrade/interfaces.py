@@ -20,6 +20,7 @@ class IUpgradeTool(Interface):
         """
         pass step of product profile towards destination
         ex: self.passUpgradeStep("alter.my.product", "1.0.2")
+        self.passUpgradeStep("alter.my.product", 12)
         """
 
     def runProfile(profile, purge_old=False):
@@ -55,27 +56,36 @@ class IUpgradeTool(Interface):
         """
 
     def migrateContent(portal_types, method, catalogs=('portal_catalog',),
-                       query=None, nofail=True):
-        """ apply method on portal_types contents of catalogs """
+                       query=None, nofail=True, stop_at_count=0):
+        """ apply method on portal_types contents of catalogs
+        portal_types can be the name of one or further portal_types,
+        or one or further Interfaces wich the content types to migrate implements
+        """
 
     def migrateRoleMappings(portal_types,
-                            catalogs=('portal_catalog',), reindex=False):
-        """ update security mappings on objets after workflow definitions changed """
+                            catalogs=('portal_catalog',), reindex=False,
+                            commit=False, stop_at_count=0):
+        """ update security mappings on objets after workflow definitions changed
+        portal_types can be the name of one or further portal_types,
+        or one or further Interfaces wich the content types to migrate implements"""
 
-    def reindexContents(portal_types, indexes=(), nofail=True, commit=False):
+    def reindexContents(portal_types, indexes=(), query=None, nofail=True,
+                        commit=False, stop_at_count=0):
         """Reindex all contents of selected types
+        portal_types can be the name of one or further portal_types,
+        or one or further Interfaces wich the content types to reindex implements
         """
 
     def refreshResources():
         """Refresh all resource registries
         """
 
-    def updateIndexes(index_tuples, catalogs=['portal_catalog'], reindex=True):
+    def updateIndexes(index_tuples, catalogs=('portal_catalog',), reindex=True):
         """
         add and/or reindex indexes of catalogs
         @param index_tuples list of tuples [(index, index_type)]
         """
 
-    def addMetadata(metadata, catalogs=['portal_catalog']):
+    def addMetadata(metadata, catalogs=('portal_catalog',)):
         """Add columns in catalog schema
         """

@@ -1,8 +1,11 @@
 Changelog
 =========
 
-1.1.6 (unreleased)
-------------------
+1.2 (unreleased)
+----------------
+
+- Upgrade step destination can be an integer.
+  [thomasdesvenain]
 
 - We can provide an interface as portal_types value
   for updated content selection.
