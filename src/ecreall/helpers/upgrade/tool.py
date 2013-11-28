@@ -4,6 +4,7 @@ import logging
 from ZODB.POSException import ConflictError
 from zope.interface import implements
 from zope.component import adapts
+from zope.interface.interfaces import IInterface
 
 from Products.GenericSetup.upgrade import _upgrade_registry
 from Products.GenericSetup.interfaces import ISetupTool, IChunkableImportContext
@@ -196,13 +197,19 @@ class UpgradeTool(object):
         else:
             query = {}
 
-        query.update({'portal_type': portal_types})
+        if type(portal_types[0]) in (str, unicode):
+            query.update({'portal_type': portal_types})
+            types_msg = ', '.join(portal_types)
+        elif IInterface.providedBy(portal_types[0]):
+            object_provides = [i.__identifier__ for i in portal_types]
+            query.update({'object_provides': object_provides})
+            types_msg = ', '.join(object_provides)
 
         for catalog in catalogs:
             catalog = getToolByName(portal, catalog)
             brains += catalog.unrestrictedSearchResults(query)
 
-        LOG.info("Migrate %s contents with %s method", ", ".join(portal_types), method.__name__)
+        LOG.info("Migrate %s contents with %s method", types_msg, method.__name__)
         pghandler = ProgressHandler(50)
         pghandler.init('Migration', len(brains))
         count = 0
@@ -264,7 +271,7 @@ class UpgradeTool(object):
         if failures > successes:
             raise Exception, "Too many failures during %s migration" % method.__name__
 
-        message = "%s objects migrated with %s method" % (", ".join(portal_types), method.__name__)
+        message = "%s objects migrated with %s method" % (types_msg, method.__name__)
         LOG.info(message)
         return message
 
