@@ -4,6 +4,9 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Fix removal of index at updateIndexes.
+  [thomasdesvenain]
+
 - Upgrade step destination can be an integer.
   [thomasdesvenain]
 

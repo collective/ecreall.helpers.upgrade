@@ -136,7 +136,7 @@ class UpgradeTool(object):
         for catalog in catalogs:
             for index, index_type in index_tuples:
                 if index in catalog.indexes():
-                    if catalog._catalog.indexes[index] != index_type:
+                    if catalog._catalog.indexes[index].meta_type != index_type:
                         catalog.delIndex(index)
                         msg = "Removed %s index with bad type in %s catalog" % (
                             index, catalog.id)
