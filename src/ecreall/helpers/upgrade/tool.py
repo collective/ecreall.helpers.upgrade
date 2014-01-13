@@ -144,7 +144,14 @@ class UpgradeTool(object):
                         msgs.append(msg)
 
                 if not index in catalog.indexes():
-                    catalog.addIndex(index, index_type)
+                    if index_type == 'ZCTextIndex':
+                        class Extra(object):
+                            lexicon_id = 'plone_lexicon'
+                            index_type = 'Okapi BM25 Rank'
+
+                        catalog.addIndex(index, index_type, extra=Extra())
+                    else:
+                        catalog.addIndex(index, index_type)
                     msg = "Added %s index in %s catalog" % (index, catalog.id)
                     LOG.info(msg)
                     msgs.append(msg)

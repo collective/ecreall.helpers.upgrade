@@ -4,6 +4,10 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- updateIndexes works with ZCTextIndex,
+  index is created with plone lexicon / Okapi BM25 Rank.
+  [thomasdesvenain]
+
 - Fix removal of index at updateIndexes.
   [thomasdesvenain]
 
