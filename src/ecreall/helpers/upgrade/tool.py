@@ -318,6 +318,23 @@ class UpgradeTool(object):
         LOG.info(message)
         return message
 
+    def disable_plaintext_indexing(self, contenttype):
+        """ Patch SearchableText method
+        Returns the original method to allow re-enabling later
+        Usage:
+        from Products.ATContentTypes.content.file import ATFile
+        orig = tool.disable_plaintext_indexing(ATFile)
+        tool.reenable_plaintext_indexing(ATFile, orig)
+        """ 
+        origSearchableText = contenttype.SearchableText 
+        contenttype.SearchableText = lambda x: "" 
+        return origSearchableText
+
+    def reenable_plaintext_indexing(self, contenttype, origSearchableText):
+        """ Restore the regular SearchableText method
+        """ 
+        contenttype.SearchableText = origSearchableText 
+
 
 class UpgradeToolForPortal(UpgradeTool):
 
