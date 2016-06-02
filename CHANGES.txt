@@ -7,6 +7,9 @@ Changelog
 - disable_plaintext_indexing and reenable_plaintext_indexing methods
   [ebrehault]
 
+- use _unrestrictedGetObject to get object from brain
+  [ebrehault]
+
 
 1.2 (2014-01-13)
 ----------------

@@ -241,7 +241,7 @@ class UpgradeTool(object):
                 LOG.warning("Catalog entry %s is corrupted : %s", str(brain), str(e))
                 continue
             try:
-                obj = brain.getObject()
+                obj = brain._unrestrictedGetObject()
             except AttributeError:
                 LOG.warning("Invalid catalog entry at %s", path)
                 continue
