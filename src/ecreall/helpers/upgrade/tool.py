@@ -242,7 +242,7 @@ class UpgradeTool(object):
                 continue
             try:
                 obj = brain._unrestrictedGetObject()
-            except AttributeError:
+            except (KeyError, AttributeError):
                 LOG.warning("Invalid catalog entry at %s", path)
                 continue
 
@@ -325,15 +325,15 @@ class UpgradeTool(object):
         from Products.ATContentTypes.content.file import ATFile
         orig = tool.disable_plaintext_indexing(ATFile)
         tool.reenable_plaintext_indexing(ATFile, orig)
-        """ 
-        origSearchableText = contenttype.SearchableText 
-        contenttype.SearchableText = lambda x: "" 
+        """
+        origSearchableText = contenttype.SearchableText
+        contenttype.SearchableText = lambda x: ""
         return origSearchableText
 
     def reenable_plaintext_indexing(self, contenttype, origSearchableText):
         """ Restore the regular SearchableText method
-        """ 
-        contenttype.SearchableText = origSearchableText 
+        """
+        contenttype.SearchableText = origSearchableText
 
 
 class UpgradeToolForPortal(UpgradeTool):

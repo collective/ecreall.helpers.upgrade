@@ -3,6 +3,8 @@ Changelog
 
 1.3 (unreleased)
 ----------------
+- migrateContents method catch KeyError when get object
+  [thomasdesvenain]
 
 - disable_plaintext_indexing and reenable_plaintext_indexing methods
   [ebrehault]
