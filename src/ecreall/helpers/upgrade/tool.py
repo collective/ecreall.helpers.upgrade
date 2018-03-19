@@ -1,6 +1,7 @@
 from copy import copy
 import logging
 
+from Acquisition import aq_base
 from ZODB.POSException import ConflictError
 from zope.interface import implements
 from zope.component import adapts
@@ -285,11 +286,23 @@ class UpgradeTool(object):
         LOG.info(message)
         return message
 
-    def reindexContents(self, portal_types, indexes=(),
-                        query=None, nofail=True, commit=False, stop_at_count=0):
+    def reindexContents(self, portal_types,
+                        indexes=[],
+                        notify_modified=0,
+                        update_metadata=1,
+                        query=None,
+                        nofail=True,
+                        commit=False,
+                        stop_at_count=0):
+        catalog = self.portal.portal_catalog
+        if not indexes:
+            indexes = [i for i in catalog.indexes()]
 
         def reindex_object(obj, path=None):
-            obj.reindexObject(idxs=indexes)
+            if notify_modified and hasattr(aq_base(obj), 'notifyModified'):
+                obj.notifyModified()
+
+                catalog.reindexObject(obj, idxs=indexes, update_metadata=update_metadata)
 
         self.migrateContent(portal_types, reindex_object, query=query,
                             nofail=nofail, commit=commit, stop_at_count=stop_at_count)

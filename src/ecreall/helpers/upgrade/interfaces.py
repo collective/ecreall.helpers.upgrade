@@ -55,8 +55,12 @@ class IUpgradeTool(Interface):
         run an upgrade profile
         """
 
-    def migrateContent(portal_types, method, catalogs=('portal_catalog',),
-                       query=None, nofail=True, stop_at_count=0):
+    def migrateContent(portal_types, # str | str[] portal types to migrate.
+                       method,  # a method that gets two arguments: object and path
+                       catalogs=('portal_catalog',),  # catalogs to query
+                       query=None,   # restrict objects to be reindexed
+                       nofail=True,  # if true, continue when method fails on an object
+                       stop_at_count=0):
         """ apply method on portal_types contents of catalogs
         portal_types can be the name of one or further portal_types,
         or one or further Interfaces wich the content types to migrate implements
@@ -69,8 +73,14 @@ class IUpgradeTool(Interface):
         portal_types can be the name of one or further portal_types,
         or one or further Interfaces wich the content types to migrate implements"""
 
-    def reindexContents(portal_types, indexes=(), query=None, nofail=True,
-                        commit=False, stop_at_count=0):
+    def reindexContents(portal_types,
+                        indexes,  # list of indexes to reindex. if not set, reindex all indexes, if empty sequence, reindex no index
+                        notify_modified=0,  # if true, call notifyModified on each (updates modification date)
+                        update_metadata=1,
+                        query=None,   # restrict objects to be reindexed
+                        nofail=True,  # if true, continue when reindex fails
+                        commit=False, # if true, commit each 500 items
+                        stop_at_count=0):
         """Reindex all contents of selected types
         portal_types can be the name of one or further portal_types,
         or one or further Interfaces wich the content types to reindex implements
