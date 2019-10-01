@@ -17,6 +17,7 @@ LOG = logging.getLogger('Upgrade Tool')
 from interfaces import IUpgradeTool
 import transaction
 
+
 class ProgressHandler(ZLogHandler):
 
     def output(self, text):
@@ -225,7 +226,11 @@ class UpgradeTool(object):
         count = 0
         successes = 0
         failures = 0
-        from webdav.EtagSupport import EtagSupport
+        try:
+            from webdav.EtagSupport import EtagSupport
+        except ImportError:
+            from OFS.EtagSupport import EtagSupport
+
         EtagSupport._http__refreshEtag = EtagSupport.http__refreshEtag
         # avoid to modify the object
         # 5 ko is an approximate size of an Archetypes object on the filesystem

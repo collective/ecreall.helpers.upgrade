@@ -4,7 +4,7 @@ Changelog
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed imports for Plone 5.2.
 
 
 1.4 (2018-01-04)
