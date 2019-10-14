@@ -96,8 +96,9 @@ class UpgradeTool(object):
         LOG.info("Installed %s", product)
 
     def uninstallProduct(self, product):
-        self.qitool.uninstallProducts([product])
-        LOG.info("Uninstalled %s", product)
+        if self.qitool.isProductInstalled('product'):
+            self.qitool.uninstallProducts([product])
+            LOG.info("Uninstalled %s", product)
 
     def reinstallProduct(self, product):
         self.qitool.installProduct(product)
@@ -108,7 +109,6 @@ class UpgradeTool(object):
             profile = '%s:default' % profile
 
         self.psetup.runAllImportStepsFromProfile('profile-%s' % profile, purge_old=purge_old)
-
 
     def runImportStep(self, profile, importstep, purge_old=False):
         if not ':' in profile:

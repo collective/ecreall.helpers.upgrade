@@ -6,6 +6,8 @@ Changelog
 
 - Fixed imports for Plone 5.2.
 
+- uninstallProduct method is repeatable.
+
 
 1.4 (2018-01-04)
 ----------------
